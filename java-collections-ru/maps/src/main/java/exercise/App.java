@@ -31,6 +31,10 @@ public class App {
         Map wordsCount = App.getWordCount(sentence);
         String result = App.toString(wordsCount);
         System.out.println(result);
+
+        Map wordsCount2 = App.getWordCount("");
+        String result2 = App.toString(wordsCount2);
+        System.out.println(result2);
     }
 }
 //END
