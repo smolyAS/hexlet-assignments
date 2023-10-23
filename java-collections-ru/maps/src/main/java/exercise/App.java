@@ -2,27 +2,43 @@ package exercise;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 // BEGIN
 public class App {
+    public static Map<String, Integer> getWordCount(String sentence) {
+        Map<String, Integer> wordCount = new HashMap<>();
 
-    public static Map getWordCount(String sentence) {
-        Map wordCount = new HashMap<>();
+        if (sentence.isEmpty()) {
+            return wordCount;
+        }
 
         String[] words = sentence.split(" ");
+
         for (String word : words) {
-            wordCount.put(word, (int) wordCount.getOrDefault(word, 0) + 1);
+            wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
         }
 
         return wordCount;
     }
 
-    public static String toString(Map wordCount) {
+    public static String toString(Map<String, Integer> wordCount) {
+
+        if (wordCount.isEmpty()) {
+            return "{}";
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
-        wordCount.forEach((key, value) -> sb.append("  " + key + ": " + value + "\n"));
-        sb.append("}");
+        for (Entry entry : wordCount.entrySet()) {
+            sb.append(" ")
+                    .append(entry.getKey())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append("\n");
+        }
 
+        sb.append("}");
         return sb.toString();
     }
 
@@ -31,6 +47,7 @@ public class App {
         Map wordsCount = App.getWordCount(sentence);
         String result = App.toString(wordsCount);
         System.out.println(result);
+
 
         Map wordsCount2 = App.getWordCount("");
         String result2 = App.toString(wordsCount2);
