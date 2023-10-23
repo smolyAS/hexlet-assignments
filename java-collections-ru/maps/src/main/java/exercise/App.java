@@ -2,7 +2,6 @@ package exercise;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 // BEGIN
 public class App {
@@ -30,7 +29,7 @@ public class App {
 
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
-        for (Entry entry : wordCount.entrySet()) {
+        for (Map.Entry<String, Integer> entry : wordCount.entrySet()) {
             sb.append(" ")
                     .append(entry.getKey())
                     .append(": ")
@@ -43,13 +42,13 @@ public class App {
     }
 
     public static void main(String[] args) {
-        String sentence = "the java is the best programming language java";
-        Map wordsCount = App.getWordCount(sentence);
+        String sentence = "word text cat apple word map apple word";
+        Map<String, Integer> wordsCount = App.getWordCount(sentence);
         String result = App.toString(wordsCount);
         System.out.println(result);
 
 
-        Map wordsCount2 = App.getWordCount("");
+        Map<String, Integer> wordsCount2 = App.getWordCount("");
         String result2 = App.toString(wordsCount2);
         System.out.println(result2);
     }
