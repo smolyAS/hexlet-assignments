@@ -42,13 +42,13 @@ public class App {
     }
 
     public static void main(String[] args) {
-        String sentence = "word text cat apple word map apple word";
+        String sentence = "the java is the best programming language java";
         Map<String, Integer> wordsCount = App.getWordCount(sentence);
         String result = App.toString(wordsCount);
         System.out.println(result);
 
-
         Map<String, Integer> wordsCount2 = App.getWordCount("");
+
         String result2 = App.toString(wordsCount2);
         System.out.println(result2);
     }
