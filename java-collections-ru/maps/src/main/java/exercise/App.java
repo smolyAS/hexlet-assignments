@@ -30,7 +30,7 @@ public class App {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         for (Map.Entry<String, Integer> entry : wordCount.entrySet()) {
-            sb.append(" ")
+            sb.append("  ")
                     .append(entry.getKey())
                     .append(": ")
                     .append(entry.getValue())
@@ -51,6 +51,7 @@ public class App {
 
         String result2 = App.toString(wordsCount2);
         System.out.println(result2);
+
     }
 }
 //END
