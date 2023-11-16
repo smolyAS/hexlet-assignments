@@ -1,28 +1,31 @@
 package exercise;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-// BEGIN
 public class App {
-    public static String getForwardedVariables(String config) {
+    public static String getForwardedVariables(String configFile) {
         Map<String, String> variables = new HashMap<>();
 
-        Stream<String> lines = config.lines();
-        lines.filter(line -> line.startsWith("environment"))
-                .map(line -> line.split("\""))
-                .filter(parts -> parts.length >= 2)
-                .flatMap(parts -> Stream.of(parts[1].split(",")))
-                .filter(envVariable -> envVariable.startsWith("X_FORWARDED_"))
-                .map(envVariable -> envVariable.split("="))
-                .filter(keyValue -> keyValue.length >= 2)
-                .forEach(keyValue -> variables.put(keyValue[0].substring("X_FORWARDED_".length()), keyValue[1]));
+        String environmentLine = Arrays.stream(configFile.split("\n"))
+                .filter(line -> line.startsWith("environment="))
+                .findFirst()
+                .orElse("");
+
+        String[] environmentVariables = environmentLine.replaceAll("^environment=\"|\"$", "").split(",");
+
+        Arrays.stream(environmentVariables)
+                .filter(variable -> variable.startsWith("X_FORWARDED_"))
+                .forEach(variable -> {
+                    String name = variable.substring("X_FORWARDED_".length());
+                    String value = variable.substring(variable.indexOf('=') + 1);
+                    variables.put(name, value);
+                });
 
         return variables.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .reduce((s1, s2) -> s1 + "," + s2)
-                .orElse("");
+                .collect(Collectors.joining(","));
     }
 }
-//END
