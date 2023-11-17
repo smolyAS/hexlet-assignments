@@ -1,39 +1,25 @@
 package exercise;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class App {
-    public static String getForwardedVariables(String configFile) {
-        Map<String, String> variables = new HashMap<>();
 
-        String[] lines = configFile.split("\n");
-
-        for (String line : lines) {
-            if (line.startsWith("environment=")) {
-                String[] environmentVariables = line.replaceAll("^environment=", "").replaceAll("$", "").split(",");
-
-                for (String variable : environmentVariables) {
-                    if (variable.startsWith("X_FORWARDED_")) {
-                        String name = variable.substring("X_FORWARDED_".length());
-                        String[] parts = name.split("=");
-
-                        if (parts.length == 2) {
-                            String key = parts[0];
-                            String value = parts[1];
-                            variables.put(key, value.replace("\"", ""));
-                        }
-                    }
-                }
-
-                break;
-            }
-        }
-
-        return variables.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
+    public static String getForwardedVariables(String configFileContent) {
+        return Arrays.stream(configFileContent.split("\n"))
+                .filter(line -> line.trim().startsWith("environment"))
+                .map(line -> {
+                    String variables = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+                    return Arrays.stream(variables.split(","))
+                            .filter(pair -> pair.trim().startsWith("X_FORWARDED_"))
+                            .map(pair -> {
+                                String[] keyValue = pair.trim().split("=");
+                                String name = keyValue[0].substring(keyValue[0].indexOf("_") + 1);
+                                String value = keyValue[1];
+                                return name + value;
+                            })
+                            .collect(Collectors.joining(","));
+                })
                 .collect(Collectors.joining(","));
     }
 }
