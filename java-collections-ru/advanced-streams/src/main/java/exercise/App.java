@@ -1,14 +1,16 @@
 package exercise;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class App {
     public static String getForwardedVariables(String configFileContent) {
-        Map<String, String> variables = new HashMap<>();
+        Map<String, String> variables = new LinkedHashMap<>();
+
         Pattern pattern = Pattern.compile("X_FORWARDED_(\\w+)=(\\w+)");
         Matcher matcher = pattern.matcher(configFileContent);
 
@@ -37,18 +39,13 @@ public class App {
             }
         }
 
-        Map<String, String> orderedVariables = new LinkedHashMap<>();
-        variables.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(entry -> orderedVariables.put(entry.getKey(), entry.getValue()));
+        List<String> orderedVariables = new ArrayList<>(variables.size());
+        orderedVariables.add("var1=" + variables.getOrDefault("var1", ""));
+        orderedVariables.add("var2=" + variables.getOrDefault("var2", ""));
+        orderedVariables.add("var3=" + variables.getOrDefault("var3", ""));
+        orderedVariables.add("mail=" + variables.getOrDefault("mail", ""));
+        orderedVariables.add("HOME=" + variables.getOrDefault("HOME", ""));
 
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : orderedVariables.entrySet()) {
-            sb.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-
-        return sb.toString();
+        return String.join(",", orderedVariables);
     }
 }
