@@ -9,7 +9,7 @@ public class App {
     public static String getForwardedVariables(String configFile) {
         Map<String, String> variables = new HashMap<>();
 
-        String environmentLine = Arrays.stream(configFile.split("\n"))
+        String environmentLine = Arrays.stream(configFile.split("\\n"))
                 .filter(line -> line.startsWith("environment="))
                 .findFirst()
                 .orElse("");
@@ -20,8 +20,12 @@ public class App {
                 .filter(variable -> variable.startsWith("X_FORWARDED_"))
                 .forEach(variable -> {
                     String name = variable.substring("X_FORWARDED_".length());
-                    String value = variable.substring(variable.indexOf('=') + 1);
-                    variables.put(name, value);
+                    String[] parts = name.split("=");
+                    if (parts.length == 2) {
+                        String key = parts[0];
+                        String value = parts[1];
+                        variables.put(key, value.replace("\"", ""));
+                    }
                 });
 
         return variables.entrySet().stream()
