@@ -14,7 +14,7 @@ public class App {
                             .filter(pair -> pair.trim().startsWith("X_FORWARDED_"))
                             .map(pair -> {
                                 String[] keyValue = pair.trim().split("=");
-                                String name = keyValue[0].substring(keyValue[0].indexOf("_") + 1);
+                                String name = keyValue[0].substring(keyValue[0].indexOf("_") + 1).replace("FORWARDED_", "");
                                 String value = keyValue[1];
                                 return name + value;
                             })
