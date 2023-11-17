@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class App {
     public static String getForwardedVariables(String configFileContent) {
         Map<String, String> variables = new HashMap<>();
-        Pattern pattern = Pattern.compile("\\bX_FORWARDED_(\\w+)=(\\w+)\\b");
+        Pattern pattern = Pattern.compile("X_FORWARDED_(\\w+)=(\\w+)");
         Matcher matcher = pattern.matcher(configFileContent);
 
         while (matcher.find()) {
@@ -19,7 +19,7 @@ public class App {
         }
 
         return variables.entrySet().stream()
-                .map(entry -> entry.getKey().toUpperCase() + "=" + entry.getValue())
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining(","));
     }
 }
