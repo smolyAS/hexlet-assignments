@@ -2,9 +2,9 @@ package exercise;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class App {
     public static String getForwardedVariables(String configFileContent) {
@@ -37,8 +37,14 @@ public class App {
             }
         }
 
-        return variables.entrySet().stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining(","));
+        Map<String, String> sortedVariables = new TreeMap<>(variables);
+
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : sortedVariables.entrySet()) {
+            sb.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+
+        return sb.toString();
     }
 }
