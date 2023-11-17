@@ -9,24 +9,28 @@ public class App {
     public static String getForwardedVariables(String configFile) {
         Map<String, String> variables = new HashMap<>();
 
-        String environmentLine = Arrays.stream(configFile.split("\\n"))
-                .filter(line -> line.startsWith("environment="))
-                .findFirst()
-                .orElse("");
+        String[] lines = configFile.split("\n");
 
-        String[] environmentVariables = environmentLine.replaceAll("^environment=\"|\"$", "").split(",");
+        for (String line : lines) {
+            if (line.startsWith("environment=")) {
+                String[] environmentVariables = line.replaceAll("^environment=", "").replaceAll("$", "").split(",");
 
-        Arrays.stream(environmentVariables)
-                .filter(variable -> variable.startsWith("X_FORWARDED_"))
-                .forEach(variable -> {
-                    String name = variable.substring("X_FORWARDED_".length());
-                    String[] parts = name.split("=");
-                    if (parts.length == 2) {
-                        String key = parts[0];
-                        String value = parts[1];
-                        variables.put(key, value.replace("\"", ""));
+                for (String variable : environmentVariables) {
+                    if (variable.startsWith("X_FORWARDED_")) {
+                        String name = variable.substring("X_FORWARDED_".length());
+                        String[] parts = name.split("=");
+
+                        if (parts.length == 2) {
+                            String key = parts[0];
+                            String value = parts[1];
+                            variables.put(key, value.replace("\"", ""));
+                        }
                     }
-                });
+                }
+
+                break;
+            }
+        }
 
         return variables.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
