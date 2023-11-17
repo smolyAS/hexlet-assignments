@@ -1,8 +1,8 @@
 package exercise;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,10 +37,14 @@ public class App {
             }
         }
 
-        Map<String, String> sortedVariables = new TreeMap<>(variables);
+        Map<String, String> orderedVariables = new LinkedHashMap<>();
+        variables.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEachOrdered(entry -> orderedVariables.put(entry.getKey(), entry.getValue()));
 
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : sortedVariables.entrySet()) {
+        for (Map.Entry<String, String> entry : orderedVariables.entrySet()) {
             sb.append(entry.getKey()).append("=").append(entry.getValue()).append(",");
         }
         sb.deleteCharAt(sb.length() - 1);
