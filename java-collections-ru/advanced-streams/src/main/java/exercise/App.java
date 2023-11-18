@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class App {
     public static String getForwardedVariables(String configFile) {
         String environmentLine = Arrays.stream(configFile.split("\n"))
-                .filter(line -> line.contains("environment="))
+                .filter(line -> line.contains("environment"))
                 .findFirst()
                 .orElse("");
 
@@ -15,7 +15,7 @@ public class App {
             return "";
         }
 
-        String environmentValue = environmentLine.replaceAll("[\"]", "");
+        String environmentValue = environmentLine.replace("\"", "");
 
         Map<String, String> variables = Arrays.stream(environmentValue.split(","))
                 .filter(variable -> variable.startsWith("X_FORWARDED_"))
