@@ -1,33 +1,22 @@
 package exercise;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class App {
     public static String getForwardedVariables(String configFile) {
-        String environmentLine = Arrays.stream(configFile.split("\n"))
-                .filter(line -> line.contains("environment"))
-                .findFirst()
-                .orElse("");
-
-        if (environmentLine.isEmpty()) {
-            return "";
-        }
-
-//        String environmentValue = environmentLine.replaceAll("\"", "");
-
-        Map<String, String> variables = Arrays.stream(environmentLine.split(","))
+        return Arrays.stream(configFile.split("\n"))
+                .filter(line -> line.startsWith("environment\""))
+                .map(line -> line.substring("environment\"".length()))
+                .flatMap(variables -> Arrays.stream(variables.split(",")))
                 .filter(variable -> variable.startsWith("X_FORWARDED_"))
-                .map(variable -> variable.split("="))
-                .collect(Collectors.toMap(
-                        variable -> variable[0].substring("X_FORWARDED_".length()),
-                        variable -> variable[1]
-                ));
-
-        return variables.entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .map(variable -> variable.substring("X_FORWARDED_".length()))
                 .collect(Collectors.joining(","));
+    }
+
+    public static void main(String[] args) {
+        String configFile = "environment\"X_FORWARDED_MAILtirion@google.com,X_FORWARDED_HOME/home/tirion,languageen\"";
+        String forwardedVariables = getForwardedVariables(configFile);
+        System.out.println(forwardedVariables);
     }
 }
