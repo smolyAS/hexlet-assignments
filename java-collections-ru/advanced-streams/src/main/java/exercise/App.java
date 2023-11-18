@@ -15,9 +15,9 @@ public class App {
             return "";
         }
 
-        String environmentValue = environmentLine.replaceAll("\"", "");
+//        String environmentValue = environmentLine.replaceAll("\"", "");
 
-        Map<String, String> variables = Arrays.stream(environmentValue.split(","))
+        Map<String, String> variables = Arrays.stream(environmentLine.split(","))
                 .filter(variable -> variable.startsWith("X_FORWARDED_"))
                 .map(variable -> variable.split("="))
                 .collect(Collectors.toMap(
