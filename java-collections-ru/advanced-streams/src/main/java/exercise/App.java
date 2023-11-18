@@ -15,7 +15,7 @@ public class App {
             return "";
         }
 
-        String environmentValue = environmentLine.replace("\"", "");
+        String environmentValue = environmentLine.replaceAll("\"", "");
 
         Map<String, String> variables = Arrays.stream(environmentValue.split(","))
                 .filter(variable -> variable.startsWith("X_FORWARDED_"))
