@@ -1,51 +1,33 @@
 package exercise;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class App {
-    public static String getForwardedVariables(String configFileContent) {
-        Map<String, String> variables = new LinkedHashMap<>();
+    public static String getForwardedVariables(String configFile) {
+        String environmentLine = Arrays.stream(configFile.split("\n"))
+                .filter(line -> line.contains("environment="))
+                .findFirst()
+                .orElse("");
 
-        Pattern pattern = Pattern.compile("X_FORWARDED_(\\w+)=(\\w+)");
-        Matcher matcher = pattern.matcher(configFileContent);
-
-        while (matcher.find()) {
-            String key = matcher.group(1);
-            String value = matcher.group(2);
-            variables.put(key, value);
+        if (environmentLine.isEmpty()) {
+            return "";
         }
 
-        Pattern envPattern = Pattern.compile("environment=\"(.+?)\"");
-        Matcher envMatcher = envPattern.matcher(configFileContent);
+        String environmentValue = environmentLine.replaceAll("[\"]", "");
 
-        while (envMatcher.find()) {
-            String envList = envMatcher.group(1);
-            String[] envVariables = envList.split(",");
-            for (String envVariable : envVariables) {
-                String[] parts = envVariable.split("=");
-                if (parts.length == 2) {
-                    String key = parts[0].trim();
-                    String value = parts[1].trim();
-                    if (key.startsWith("X_FORWARDED_")) {
-                        key = key.substring(12);
-                        variables.put(key, value);
-                    }
-                }
-            }
-        }
+        Map<String, String> variables = Arrays.stream(environmentValue.split(","))
+                .filter(variable -> variable.startsWith("X_FORWARDED_"))
+                .map(variable -> variable.split("="))
+                .collect(Collectors.toMap(
+                        variable -> variable[0].substring("X_FORWARDED_".length()),
+                        variable -> variable[1]
+                ));
 
-        List<String> orderedVariables = new ArrayList<>(variables.size());
-        orderedVariables.add("var1=" + variables.getOrDefault("var1", ""));
-        orderedVariables.add("var2=" + variables.getOrDefault("var2", ""));
-        orderedVariables.add("var3=" + variables.getOrDefault("var3", ""));
-        orderedVariables.add("mail=" + variables.getOrDefault("mail", ""));
-        orderedVariables.add("HOME=" + variables.getOrDefault("HOME", ""));
-
-        return String.join(",", orderedVariables);
+        return variables.entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining(","));
     }
 }
