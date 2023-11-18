@@ -12,6 +12,7 @@ public class App {
                 .flatMap(line -> Arrays.stream(line.split(",")))
                 .map(String::trim)
                 .filter(line -> line.startsWith("X_FORWARDED_"))
+                .map(line -> line.substring("X_FORWARDED_".length()))
                 .collect(Collectors.joining(","));
     }
 
