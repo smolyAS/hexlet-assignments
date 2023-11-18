@@ -9,6 +9,7 @@ public class App {
                 .filter(line -> line.startsWith("environment\""))
                 .map(line -> line.substring("environment\"".length()))
                 .flatMap(variables -> Arrays.stream(variables.split(",")))
+                .map(String::trim)
                 .filter(variable -> variable.startsWith("X_FORWARDED_"))
                 .map(variable -> variable.substring("X_FORWARDED_".length()))
                 .collect(Collectors.joining(","));
