@@ -33,15 +33,15 @@ class AppTest {
     void testBuildApartmentsList2() {
         List<Home> apartments = new ArrayList<>(List.of(
             new Cottage(100, 1),
-            new Flat(200, 10, 2),
-            new Flat(210, 30, 5),
+            new Flat(190, 10, 2),
+            new Flat(180, 30, 5),
             new Cottage(250, 3)
         ));
 
         List<String> expected = new ArrayList<>(List.of(
             "1 этажный коттедж площадью 100.0 метров",
-            "Квартира площадью 200.0 метров на 2 этаже",
-            "Квартира площадью 210.0 метров на 5 этаже",
+            "Квартира площадью 180.0 метров на 5 этаже",
+            "Квартира площадью 190.0 метров на 2 этаже",
             "3 этажный коттедж площадью 250.0 метров"
         ));
 
