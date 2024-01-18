@@ -6,9 +6,16 @@ import java.util.stream.Collectors;
 
 public class App {
     public static List<String> buildApartmentsList(List<Home> homes, int n) {
-        // Сортировка объектов по площади по возрастанию
+        // Сортировка объектов по общей площади по возрастанию
         List<Home> sortedHomes = homes.stream()
-                .sorted(Comparator.comparingDouble(Home::getArea))
+                .sorted(Comparator.comparingDouble(home -> {
+                    if (home instanceof Flat) {
+                        return ((Flat) home).getTotalArea();
+                    } else {
+                        // Обработка случая, когда объект не является Flat
+                        return 0.0;
+                    }
+                }))
                 .collect(Collectors.toList());
 
         // Получение первых n элементов
