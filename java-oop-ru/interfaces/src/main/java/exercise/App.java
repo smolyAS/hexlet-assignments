@@ -1,21 +1,15 @@
 package exercise;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class App {
     public static List<String> buildApartmentsList(List<Home> homes, int n) {
-        // Сортировка объектов по площади и типу недвижимости
+        // Сортировка объектов по площади по возрастанию
         List<Home> sortedHomes = homes.stream()
-                .sorted(Comparator.comparingDouble(Home::getArea)
-                        .thenComparing(home -> {
-                            if (home instanceof Flat) {
-                                return 0;
-                            } else {
-                                return 1;
-                            }
-                        }))
+                .sorted(Comparator.comparingDouble(Home::getArea))
                 .collect(Collectors.toList());
 
         // Получение первых n элементов
@@ -29,5 +23,17 @@ public class App {
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    public static void main(String[] args) {
+        List<Home> apartments = new ArrayList<>(List.of(
+                new Flat(41, 3, 10),
+                new Cottage(125.5, 2),
+                new Flat(80, 10, 2),
+                new Cottage(150, 3)
+        ));
+
+        List<String> result = App.buildApartmentsList(apartments, 3);
+        System.out.println(result);
     }
 }
