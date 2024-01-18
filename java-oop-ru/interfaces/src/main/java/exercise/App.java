@@ -6,16 +6,16 @@ import java.util.stream.Collectors;
 
 public class App {
     public static List<String> buildApartmentsList(List<Home> homes, int n) {
-        // Сортировка объектов по общей площади по возрастанию
+        // Сортировка объектов по площади и типу недвижимости
         List<Home> sortedHomes = homes.stream()
-                .sorted(Comparator.comparingDouble(home -> {
-                    if (home instanceof Flat) {
-                        return ((Flat) home).getTotalArea();
-                    } else {
-                        // Обработка случая, когда объект не является Flat
-                        return 0.0;
-                    }
-                }))
+                .sorted(Comparator.comparingDouble(Home::getArea)
+                        .thenComparing(home -> {
+                            if (home instanceof Flat) {
+                                return 0;
+                            } else {
+                                return 1;
+                            }
+                        }))
                 .collect(Collectors.toList());
 
         // Получение первых n элементов
