@@ -33,8 +33,8 @@ class AppTest {
     void testBuildApartmentsList2() {
         List<Home> apartments = new ArrayList<>(List.of(
             new Cottage(100, 1),
-            new Flat(190, 10, 2),
-            new Flat(180, 30, 5),
+            new Flat(200, 0, 2),
+            new Flat(210, 0, 5),
             new Cottage(250, 3)
         ));
 
